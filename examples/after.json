@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "server": { "name": "calendar-mcp", "version": "2.0.0" },
+  "tools": [
+    {
+      "name": "create_event",
+      "description": "Create a calendar event.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "start": { "type": "string" },
+          "attendees": { "type": "array", "items": { "type": "string" } },
+          "timezone": { "type": "string" }
+        },
+        "required": ["title", "start", "timezone"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": { "eventId": { "type": "string" } },
+        "required": ["eventId"]
+      }
+    }
+  ],
+  "resources": [],
+  "prompts": []
+}

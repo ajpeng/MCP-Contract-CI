@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "server": { "name": "calendar-mcp", "version": "1.4.0" },
+  "tools": [
+    {
+      "name": "create_event",
+      "description": "Create a calendar event.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "start": { "type": "string" },
+          "attendees": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["title", "start"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": { "eventId": { "type": "string" }, "url": { "type": "string" } },
+        "required": ["eventId"]
+      }
+    },
+    {
+      "name": "find_availability",
+      "inputSchema": { "type": "object", "properties": { "people": { "type": "array" } }, "required": ["people"] }
+    }
+  ],
+  "resources": [{ "uri": "calendar://timezone", "name": "Default timezone" }],
+  "prompts": [{ "name": "schedule-team-meeting" }]
+}
