@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "calls": [
+    {
+      "name": "Schedule launch review",
+      "tool": "create_event",
+      "arguments": {
+        "title": "Launch review",
+        "start": "2026-07-20T14:00:00Z",
+        "attendees": ["ada@example.com"]
+      }
+    },
+    {
+      "name": "Find a suitable slot",
+      "tool": "find_availability",
+      "arguments": { "people": ["ada@example.com", "sam@example.com"] }
+    }
+  ]
+}
