@@ -1,0 +1,31 @@
+name: MCP Contract CI
+description: Detect breaking MCP tool, resource, and prompt changes in pull requests
+inputs:
+  baseline:
+    description: Path to the released capability manifest
+    required: true
+  candidate:
+    description: Path to the candidate capability manifest
+    required: true
+  fail-on-breaking:
+    description: Fail the check when breaking changes are found
+    required: false
+    default: "true"
+  traces:
+    description: Newline-separated paths to saved agent trace files
+    required: false
+  replay-command:
+    description: Optional command that starts the candidate MCP server for live trace replay
+    required: false
+  github-token:
+    description: Token used to update the pull request comment
+    required: false
+    default: ${{ github.token }}
+outputs:
+  breaking-changes:
+    description: Number of breaking changes found
+  broken-workflows:
+    description: Number of saved workflows that no longer pass manifest validation
+runs:
+  using: node20
+  main: dist/action.js
