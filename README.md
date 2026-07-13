@@ -4,6 +4,12 @@ MCP Contract CI catches the changes that quietly break agents after an MCP serve
 
 It is built for teams that treat MCP tools as a product surface. A tool rename, a newly required field, or a missing response property can be enough to strand an otherwise healthy agent workflow.
 
+![MCP Contract CI visualizes protected MCP tool contracts](assets/social-preview.png)
+
+## Why it matters
+
+MCP tools are APIs for agents. When their contracts change without a compatibility check, a release can look healthy while quietly breaking the workflows that depend on it. MCP Contract CI brings that failure into the pull request, where it is easy to understand and fix.
+
 ## What it checks
 
 - Removed or likely renamed tools
@@ -105,7 +111,7 @@ Add `expectedOutput` to a trace call when the response shape matters. Expected o
 
 ## GitHub Action
 
-Use the action from this repository after publishing it, or try it locally with `uses: ./`.
+Use the action from this repository after publishing it, or try it locally with `uses: ./`. Once a release tag exists, pin to a major version such as `ajpeng/MCP-Contract-CI@v1`.
 
 ```yaml
 name: MCP contract

@@ -29,3 +29,6 @@ outputs:
 runs:
   using: node20
   main: dist/action.js
+branding:
+  icon: shield
+  color: purple
