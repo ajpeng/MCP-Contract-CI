@@ -25,6 +25,17 @@
     "github-actions"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajpeng/MCP-Contract-CI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ajpeng/MCP-Contract-CI/issues"
+  },
+  "homepage": "https://github.com/ajpeng/MCP-Contract-CI#readme",
+  "engines": {
+    "node": ">=20"
+  },
   "devDependencies": {
     "@types/node": "^22.10.5",
     "tsx": "^4.19.2",
