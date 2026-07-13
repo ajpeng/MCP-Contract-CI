@@ -3,12 +3,17 @@ import { diffManifests, formatMarkdown } from "./diff.js";
 import { loadManifest } from "./manifest.js";
 import { replayLiveTrace, replayTrace } from "./replay.js";
 const marker = "<!-- mcp-contract-ci -->";
+function input(name) {
+    const exact = `INPUT_${name.toUpperCase()}`;
+    const normalized = `INPUT_${name.toUpperCase().replaceAll("-", "_")}`;
+    return process.env[exact] ?? process.env[normalized];
+}
 async function output(name, value) {
     if (process.env.GITHUB_OUTPUT)
         await appendFile(process.env.GITHUB_OUTPUT, `${name}=${value}\n`);
 }
 async function postComment(body) {
-    const token = process.env.INPUT_GITHUB_TOKEN;
+    const token = input("github-token");
     const repository = process.env.GITHUB_REPOSITORY;
     const eventPath = process.env.GITHUB_EVENT_PATH;
     if (!token || !repository || !eventPath || process.env.GITHUB_EVENT_NAME !== "pull_request")
@@ -47,20 +52,21 @@ async function main() {
     if (!baseline || !candidate)
         throw new Error("The baseline and candidate inputs are required");
     const result = diffManifests(await loadManifest(baseline), await loadManifest(candidate));
-    const brokenWorkflows = await replaySavedTraces(process.env.INPUT_TRACES, candidate, process.env.INPUT_REPLAY_COMMAND);
+    const brokenWorkflows = await replaySavedTraces(input("traces"), candidate, input("replay-command"));
     const impact = brokenWorkflows > 0
         ? `\n\n> **Agent workflow impact:** This candidate breaks ${brokenWorkflows} saved workflow${brokenWorkflows === 1 ? "" : "s"}.`
         : "";
     const report = `${formatMarkdown(result)}${impact}`;
+    const shouldFail = result.summary.breaking > 0 && (input("fail-on-breaking") ?? "true") === "true";
     console.log(report);
     if (process.env.GITHUB_STEP_SUMMARY)
         await appendFile(process.env.GITHUB_STEP_SUMMARY, `${report}\n`);
     for (const change of result.changes)
-        console.log(`::error title=MCP contract break::${change.message}`);
+        console.log(`::${shouldFail ? "error" : "warning"} title=MCP contract break::${change.message}`);
     await postComment(report);
     await output("breaking-changes", String(result.summary.breaking));
     await output("broken-workflows", String(brokenWorkflows));
-    if (result.summary.breaking > 0 && (process.env.INPUT_FAIL_ON_BREAKING ?? "true") === "true")
+    if (shouldFail)
         process.exitCode = 1;
 }
 main().catch((error) => {
