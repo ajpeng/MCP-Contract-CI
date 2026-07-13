@@ -150,9 +150,3 @@ The project intentionally has a small dependency footprint. The contract engine 
 ## Scope and next steps
 
 This MVP focuses on JSON capability snapshots because they are reviewable, easy to archive, and reliable in CI. A production follow-up would add server introspection to generate manifests automatically, semantic version policy, richer JSON Schema support, and a small release-history dashboard backed by the same report format.
-
-## Resume bullet
-
-> Built MCP Contract CI, a GitHub-integrated compatibility checker that detects breaking MCP tool-schema changes and replays agent workflows before server releases.
-
-For interviews, emphasize the design choice behind it: MCP servers expose a contract to agents, and contract changes need the same release discipline as public APIs.
