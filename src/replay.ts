@@ -2,8 +2,17 @@ import { spawn } from "node:child_process";
 import { createInterface } from "node:readline";
 import type { CapabilityManifest, Json, JsonSchema, ReplayResult, TraceFile } from "./types.js";
 
+function stable(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(stable).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.entries(value as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => `${JSON.stringify(key)}:${stable(item)}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
 function matchesSchema(value: Json, schema: JsonSchema): boolean {
-  if (schema.enum && !schema.enum.some((item) => JSON.stringify(item) === JSON.stringify(value))) return false;
+  if (schema.const !== undefined && stable(value) !== stable(schema.const)) return false;
+  if (schema.enum && !schema.enum.some((item) => stable(item) === stable(value))) return false;
   const type = Array.isArray(schema.type) ? schema.type : schema.type ? [schema.type] : [];
   if (type.length && !type.some((item) => matchesType(value, item))) return false;
   if (value && typeof value === "object" && !Array.isArray(value) && schema.properties) {
