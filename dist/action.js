@@ -52,15 +52,16 @@ async function main() {
         ? `\n\n> **Agent workflow impact:** This candidate breaks ${brokenWorkflows} saved workflow${brokenWorkflows === 1 ? "" : "s"}.`
         : "";
     const report = `${formatMarkdown(result)}${impact}`;
+    const shouldFail = result.summary.breaking > 0 && (process.env.INPUT_FAIL_ON_BREAKING ?? "true") === "true";
     console.log(report);
     if (process.env.GITHUB_STEP_SUMMARY)
         await appendFile(process.env.GITHUB_STEP_SUMMARY, `${report}\n`);
     for (const change of result.changes)
-        console.log(`::error title=MCP contract break::${change.message}`);
+        console.log(`::${shouldFail ? "error" : "warning"} title=MCP contract break::${change.message}`);
     await postComment(report);
     await output("breaking-changes", String(result.summary.breaking));
     await output("broken-workflows", String(brokenWorkflows));
-    if (result.summary.breaking > 0 && (process.env.INPUT_FAIL_ON_BREAKING ?? "true") === "true")
+    if (shouldFail)
         process.exitCode = 1;
 }
 main().catch((error) => {
