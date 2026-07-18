@@ -1,0 +1,1 @@
+{"version":3,"file":"github.js","sourceRoot":"","sources":["../src/github.ts"],"names":[],"mappings":"AAAA,MAAM,aAAa,GAAG,wBAAwB,CAAC;AAE/C,MAAM,UAAU,gBAAgB,CAAC,UAAkB,EAAE,WAAmB;IACtE,OAAO,GAAG,aAAa,UAAU,UAAU,WAAW,WAAW,WAAW,CAAC;AAC/E,CAAC;AAED,MAAM,UAAU,eAAe,CAAC,UAAkB,EAAE,SAAiB;IACnE,OAAO,GAAG,aAAa,UAAU,UAAU,oBAAoB,SAAS,EAAE,CAAC;AAC7E,CAAC"}

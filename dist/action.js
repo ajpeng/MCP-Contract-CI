@@ -1,5 +1,6 @@
 import { appendFile, readFile } from "node:fs/promises";
 import { diffManifests, formatMarkdown } from "./diff.js";
+import { issueCommentUrl, issueCommentsUrl } from "./github.js";
 import { loadManifest } from "./manifest.js";
 import { replayLiveTrace, replayTrace } from "./replay.js";
 const marker = "<!-- mcp-contract-ci -->";
@@ -23,11 +24,11 @@ async function postComment(body) {
     if (!number)
         return;
     const headers = { Accept: "application/vnd.github+json", Authorization: `Bearer ${token}`, "X-GitHub-Api-Version": "2022-11-28" };
-    const base = `https://api.github.com/repos/${repository}/issues/${number}/comments`;
+    const base = issueCommentsUrl(repository, number);
     const existing = await fetch(base, { headers }).then(async (response) => response.ok ? response.json() : []);
     const previous = existing.find((comment) => comment.body.includes(marker));
     const options = { method: previous ? "PATCH" : "POST", headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify({ body: `${marker}\n${body}` }) };
-    const response = await fetch(previous ? `${base}/${previous.id}` : base, options);
+    const response = await fetch(previous ? issueCommentUrl(repository, previous.id) : base, options);
     if (!response.ok)
         console.warn(`Could not post PR comment: ${response.status} ${response.statusText}`);
 }
