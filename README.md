@@ -152,7 +152,3 @@ npm run build
 ```
 
 The project intentionally has a small dependency footprint. The contract engine is framework-free TypeScript, the tests use Node's built-in test runner, and the action uses the GitHub REST API directly.
-
-## Scope and next steps
-
-This MVP focuses on JSON capability snapshots because they are reviewable, easy to archive, and reliable in CI. A production follow-up would add server introspection to generate manifests automatically, semantic version policy, richer JSON Schema support, and a small release-history dashboard backed by the same report format.
